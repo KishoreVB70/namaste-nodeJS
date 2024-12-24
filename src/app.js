@@ -1,5 +1,6 @@
 const express = require("express");
 const {connectMongoose} = require("./config/mongoose");
+const User = require("./models/user");
 
 async function main() {
     try {
