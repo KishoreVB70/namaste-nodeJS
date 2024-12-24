@@ -6,6 +6,8 @@ async function main() {
     try {
         await connectMongoose();
         const app = express();
+
+        app.use(express.json());
         app.post("/user", async(req, res) => {
             try {
                 console.log("got request");
