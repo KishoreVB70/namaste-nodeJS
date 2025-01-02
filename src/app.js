@@ -1,6 +1,7 @@
 const express = require("express");
 const {connectMongoose} = require("./config/mongoose");
 const User = require("./models/user");
+const useridmd = require("./middleware/userid");
 
 async function main() {
     try {
@@ -13,18 +14,7 @@ async function main() {
         // Parse JSON
         app.use(express.json());
 
-        app.use('/user/:userID', async(req,res, next) => {
-            try {
-                if (req.params.userID  > 100) {
-                    res.status(400).send({message: "User id out of bound"});
-                } else {
-                    next();
-                }
-            } catch(error) {
-                console.log(error);
-                res.status(500).send({message: "something went wrong"});
-            }
-        }, async(req, res) => {
+        app.use('/user/:userID', useridmd, async(req, res) => {
             try {
                 console.log(req.params.userID);
                 res.status(200).send({user: {
