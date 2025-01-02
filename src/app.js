@@ -6,8 +6,7 @@ const useridmd = require("./middleware/userid");
 async function main() {
     try {
         // connect to database
-        // await connectMongoose();
-        console.log("hi");
+        await connectMongoose();
 
         const app = express();
 
