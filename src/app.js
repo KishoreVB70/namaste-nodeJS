@@ -13,17 +13,27 @@ async function main() {
         // Parse JSON
         app.use(express.json());
 
-        app.use('/user/:userID', async(req, res) => {
+        app.use('/user/:userID', async(req,res, next) => {
             try {
-                console.log(req.query.userID);
+                if (req.params.userID  > 100) {
+                    res.status(400).send({message: "User id out of bound"});
+                } else {
+                    next();
+                }
+            } catch(error) {
+                console.log(error);
+                res.status(500).send({message: "something went wrong"});
+            }
+        }, async(req, res) => {
+            try {
                 console.log(req.params.userID);
                 res.status(200).send({user: {
                     "name": "puffy",
-                    "queryID": `${req.query.userID}`,
                     "urlID": `${req.params.userID}`,
                 }});
             }catch(error) {
                 console.log(error);
+                res.status(500).send({message: "something went wrong"});
             }
         })
         // Post request
