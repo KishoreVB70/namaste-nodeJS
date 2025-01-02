@@ -40,6 +40,17 @@ async function main() {
             }
 
         })
+
+        app.use("/", (err, req, res, next) => {
+            if (err) {
+                console.log(err); 
+                if (err.message) {
+                    res.status(500).send(err.message);
+                } else {
+                    res.status(500).send("Something went wrong");
+                }
+            }
+        })
         app.listen("3000", () => {
             console.log("Server up and runnin")
         });
