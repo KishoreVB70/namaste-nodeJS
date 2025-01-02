@@ -13,10 +13,15 @@ async function main() {
         // Parse JSON
         app.use(express.json());
 
-        app.use('/user', async(req, res) => {
+        app.use('/user/:userID', async(req, res) => {
             try {
-                console.log(req.query);
-                res.status(200).send({user: {"name": "puffy", "id": `${req.query}`}});
+                console.log(req.query.userID);
+                console.log(req.params.userID);
+                res.status(200).send({user: {
+                    "name": "puffy",
+                    "queryID": `${req.query.userID}`,
+                    "urlID": `${req.params.userID}`,
+                }});
             }catch(error) {
                 console.log(error);
             }
