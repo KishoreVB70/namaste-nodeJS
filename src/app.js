@@ -1,5 +1,5 @@
 const express = require("express");
-const {connectMongoose} = require("./config/mongoose");
+const connectMongoose = require("./config/mongoose");
 const User = require("./models/user");
 const useridmd = require("./middleware/userid");
 
@@ -28,6 +28,7 @@ async function main() {
         // Post request
         app.post("/user", async(req, res) => {
             try {
+                const password = req.body;
                 console.log("got request");
                 const user = req.body;
                 const userModel = new User(user);
@@ -37,7 +38,6 @@ async function main() {
                 console.log(error);
                 res.status(500).send("Unable to create user");
             }
-
         })
 
         app.use("/", (err, req, res, next) => {
@@ -50,6 +50,7 @@ async function main() {
                 }
             }
         })
+
         app.listen("3000", () => {
             console.log("Server up and runnin")
         });
