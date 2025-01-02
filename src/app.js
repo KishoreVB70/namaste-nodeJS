@@ -4,10 +4,24 @@ const User = require("./models/user");
 
 async function main() {
     try {
-        await connectMongoose();
+        // connect to database
+        // await connectMongoose();
+        console.log("hi");
+
         const app = express();
 
+        // Parse JSON
         app.use(express.json());
+
+        app.use('/user', async(req, res) => {
+            try {
+                console.log(req.query);
+                res.status(200).send({user: {"name": "puffy", "id": `${req.query}`}});
+            }catch(error) {
+                console.log(error);
+            }
+        })
+        // Post request
         app.post("/user", async(req, res) => {
             try {
                 console.log("got request");
@@ -21,7 +35,7 @@ async function main() {
             }
 
         })
-        app.listen("3100", () => {
+        app.listen("3000", () => {
             console.log("Server up and runnin")
         });
     } catch (error) {
