@@ -2,6 +2,7 @@ const express = require("express");
 const connectMongoose = require("./config/mongoose");
 const User = require("./models/user");
 const useridmd = require("./middleware/userid");
+const { userValidation } = require("./utils/validation");
 
 async function main() {
     try {
@@ -25,18 +26,23 @@ async function main() {
                 res.status(500).send({message: "something went wrong"});
             }
         })
-        // Post request
+        // Create a user
         app.post("/user", async(req, res) => {
             try {
-                const password = req.body;
-                console.log("got request");
                 const user = req.body;
+                // 1) Perform validation
+                if (!userValidation(user)) {
+                    throw new Error("Invalid user credentials");
+                }
+                console.log(user);
                 const userModel = new User(user);
                 await userModel.save();
                 res.status(200).send("User created");
             } catch (error) {
                 console.log(error);
-                res.status(500).send("Unable to create user");
+                res.status(500).send({
+                    msg: "Unable to create user"
+                });
             }
         })
 
