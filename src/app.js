@@ -30,18 +30,29 @@ async function main() {
         app.post("/user", async(req, res) => {
             try {
                 const user = req.body;
-                // 1) Perform validation
+                const{name, email} = req.body;
+
+                // Validation
                 if (!userValidation(user)) {
-                    throw new Error("Invalid user credentials");
+                    return res.status(400).send({
+                        msg: "Invalid credentials"
+                    });
                 }
-                console.log(user);
+
+                // Existing user check
+                const existingUser = await User.findOne({
+                    $or: [{ name }, { email }]
+                });
+                if(existingUser) return res.status(400).send({
+                    msg: "Existing user"
+                });
                 const userModel = new User(user);
                 await userModel.save();
                 res.status(200).send("User created");
             } catch (error) {
                 console.log(error);
                 res.status(500).send({
-                    msg: "Unable to create user"
+                    msg: "Unable to create user " + error
                 });
             }
         })

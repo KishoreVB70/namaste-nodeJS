@@ -3,7 +3,7 @@ function userValidation(user) {
         return false;
     }
 
-    if (!usernameValidation) return false;
+    if (!usernameValidation(user.name)) return false;
     if (!passwordValidation) return false;
     if (!emailValidation) return false;
     return true;
