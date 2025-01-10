@@ -2,6 +2,7 @@ const express = require("express");
 const connectMongoose = require("./config/mongoose");
 const User = require("./models/user");
 const useridmd = require("./middleware/userid");
+const jwt = require("jsonwebtoken");
 const { userValidation } = require("./utils/validation");
 
 async function main() {
@@ -14,7 +15,7 @@ async function main() {
         // Parse JSON
         app.use(express.json());
 
-        app.use('/user/:userID', useridmd, async(req, res) => {
+        app.get('/user/:userID', useridmd, async(req, res) => {
             try {
                 console.log(req.params.userID);
                 res.status(200).send({user: {
@@ -57,6 +58,14 @@ async function main() {
             }
         })
 
+        app.post("/login", async(req,res) => {
+            const token = jwt.sign("address", process.env.JWT_SECRET);
+            console.log(token);
+            res.cookie(token);
+            res.status(200).send({token});
+        })
+
+        // Unhandled error
         app.use("/", (err, req, res, next) => {
             if (err) {
                 console.log(err); 
