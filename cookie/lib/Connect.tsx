@@ -45,7 +45,7 @@ function Connect() {
           setError(err instanceof Error ? err.message : 'Error verifying address');
         }
       }
-     }
+    }
 
      void verifyAddress();
   }, [address, hasCookie, isConnected, signMessageAsync]);
@@ -88,6 +88,11 @@ function Connect() {
         >
             Disconnect Wallet
         </button>
+        {error && (
+          <div className="mt-4 text-red-500 text-center">
+            {error}
+          </div>
+        )}
     </div>
 
   )

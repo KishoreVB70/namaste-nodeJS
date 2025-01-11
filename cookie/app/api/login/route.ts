@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     }
 
     // Generate a JWT
+    console.log(JWT_SECRET);
     const token = jwt.sign({ address }, JWT_SECRET, { expiresIn: '1h' });
 
     const response = NextResponse.json({ message: 'Address verified successfully', token, address });
