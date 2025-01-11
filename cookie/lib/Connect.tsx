@@ -4,7 +4,6 @@ import { appKit } from "@/lib/providers";
 import { useState } from "react";
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import useStore from './store';
 
 function Connect() {
@@ -14,10 +13,14 @@ function Connect() {
   const { signMessageAsync } = useSignMessage();
   const { hasCookie, setHasCookie }= useStore();
 
+  // Connect wallet
   const handleConnect = async (): Promise<void> => {
     setError(''); // Clear any previous errors
+
+    // Clear existing cookie before sign in with wallet
+    await clearCookie();
+
     try {
-      Cookies.remove("userwallet");
       await appKit.open();
     } catch (err) {
       console.error('Connection error:', err);
@@ -25,25 +28,28 @@ function Connect() {
     }
   };
 
+  // Check JWT
   const checkCookie = useCallback(async() => {
     try {
-      const cookie = await axios.get('/api/cookie');
-      console.log(cookie);
-      if (cookie) {
-        console.log("cook");
+      const res = await axios.get("/api/cookie");
+      console.log(res);
+      if (res.status === 200) {
+        console.log("Found cookie");
         setHasCookie(true);
         return true;
       } 
       else {
+        console.log("Cookie not found");
         setHasCookie(false);
         return false;
       }
     }catch(error) {
-      console.log(error);
+      console.log("Error: ", error);
       return false;
     }
   }, [setHasCookie]);
 
+  // Obtain JWT
   const verifyAddress = useCallback(async() => {
     if (!address) return;
     setError(''); // Clear previous errors
@@ -65,14 +71,24 @@ function Connect() {
     }
   }, [address, signMessageAsync])
 
+  // Delete client cookie
+  const clearCookie = useCallback(async() => {
+    try {
+      await axios.delete("/api/cookie");
+      console.log("cookie cleared");
+    }catch(error) {
+      console.log(error);
+    }
+  }, [])
+
   // Check for JWT and obtain JWT
   useEffect(() => {
     const hasCookieCheck = async () => {
       if (!isConnected || !address) return;
       if (hasCookie) return;
-      const cookieCheck = checkCookie();
+      const cookieCheck = await checkCookie();
       if (!cookieCheck) {
-        void verifyAddress();
+        void await verifyAddress();
       }
     }
     void hasCookieCheck();
