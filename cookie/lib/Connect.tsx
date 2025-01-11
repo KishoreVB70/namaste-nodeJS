@@ -1,17 +1,18 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { appKit } from "@/lib/providers";
 import { useState } from "react";
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import useStore from './store';
 
 function Connect() {
   const [error, setError] = useState<string>('');
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const [hasCookie, setHasCookie] = useState(false);
   const { signMessageAsync } = useSignMessage();
+  const { hasCookie, setHasCookie }= useStore();
 
   const handleConnect = async (): Promise<void> => {
     setError(''); // Clear any previous errors
@@ -24,44 +25,60 @@ function Connect() {
     }
   };
 
+  const checkCookie = useCallback(async() => {
+    try {
+      const cookie = await axios.get('/api/cookie');
+      console.log(cookie);
+      if (cookie) {
+        console.log("cook");
+        setHasCookie(true);
+        return true;
+      } 
+      else {
+        setHasCookie(false);
+        return false;
+      }
+    }catch(error) {
+      console.log(error);
+      return false;
+    }
+  }, [setHasCookie]);
+
+  const verifyAddress = useCallback(async() => {
+    if (!address) return;
+    setError(''); // Clear previous errors
+    try {
+      // Generate and sign a verification message
+      const message = `Verify ownership of address ${address} at ${new Date().toISOString()}`;
+      const signature = await signMessageAsync({ message });
+
+      // Send the signed message and address to the API for verification
+      const response = await axios.post('/api/login', {
+        address,
+        signature,
+        message,
+      });
+      console.log('Verification response:', response.data);
+    } catch (err) {
+      console.error('Verification error:', err);
+      setError(err instanceof Error ? err.message : 'Error verifying address');
+    }
+  }, [address, signMessageAsync])
+
+  // Check for JWT and obtain JWT
   useEffect(() => {
-    const verifyAddress = async () => {
-      if (isConnected && address && !hasCookie) {
-        setError(''); // Clear previous errors
-        try {
-          // Generate and sign a verification message
-          const message = `Verify ownership of address ${address} at ${new Date().toISOString()}`;
-          const signature = await signMessageAsync({ message });
-  
-          // Send the signed message and address to the API for verification
-          const response = await axios.post('/api/login', {
-            address,
-            signature,
-            message,
-          });
-          console.log('Verification response:', response.data);
-        } catch (err) {
-          console.error('Verification error:', err);
-          setError(err instanceof Error ? err.message : 'Error verifying address');
-        }
+    const hasCookieCheck = async () => {
+      if (!isConnected || !address) return;
+      if (hasCookie) return;
+      const cookieCheck = checkCookie();
+      if (!cookieCheck) {
+        void verifyAddress();
       }
     }
+    void hasCookieCheck();
+  }, [address, hasCookie, isConnected, checkCookie, verifyAddress]);
 
-     void verifyAddress();
-  }, [address, hasCookie, isConnected, signMessageAsync]);
-
-  // Check cookie
-  useEffect (() => {
-    const checkCookie = async () => {
-      const cookie = Cookies.get('userwallet');
-      if (cookie) {
-        setHasCookie(true);
-      } 
-      else setHasCookie(false);
-    }
-    void checkCookie();
-  }, [])
-
+  // ---------------------------------------------<UI>----------------------------------
 
   if (!isConnected) return (
     <div>

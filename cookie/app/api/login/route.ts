@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const token = jwt.sign({ address }, JWT_SECRET, { expiresIn: '1h' });
 
     const response = NextResponse.json({ message: 'Address verified successfully', token, address });
-    response.cookies.set('token', token, {
+    response.cookies.set('userwallet', token, {
       httpOnly: true, // Ensures the cookie is inaccessible to JavaScript on the client
       secure: process.env.NODE_ENV === 'production', // Sends the cookie over HTTPS only in production
       sameSite: 'strict', // Protects against CSRF attacks
