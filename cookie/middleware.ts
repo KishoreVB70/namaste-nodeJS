@@ -1,36 +1,33 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from "jose";
 
-interface JwtPayloadWithAddress extends jwt.JwtPayload {
-    address: string;
-}
-export function middleware(request: NextRequest) {
+
+export async function middleware(request: NextRequest) {
     try {
-        console.log("in middleware");
         const token = request.cookies.get("userwallet")?.value;
         if (!token) {
             return NextResponse.json({error: "no token"}, {status:401});
         }
-        const secretKey = process.env.JWT_SECRET as string;
-        console.log(secretKey);
 
+        const secretKey = process.env.JWT_SECRET as string;
         if (!secretKey) {
           throw new Error('JWT secret key is not defined');
         }
-    
-        const decoded = jwt.verify(token, secretKey);
-        console.log("decoded", decoded);
+
+        const secretKeyUint8 = new TextEncoder().encode(secretKey);
+        const { payload } = await jwtVerify(token, secretKeyUint8);
 
         // Type assurance
-        if (typeof decoded !== 'object' || decoded === null || !('address'  in  decoded)) {
-            return NextResponse.json({error: "Invalid token"}, {status:401});
+        if (typeof payload !== 'object' || !payload || !('address' in payload)) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
-        const payload = decoded as JwtPayloadWithAddress;
         const requestHeaders = new Headers(request.headers);
-        console.log("Payload", payload.address);
-        requestHeaders.set('x-address', payload.address);
+
+        const address = payload.address as string;
+        requestHeaders.set('x-address', address);
+
         return NextResponse.next({
           request: {
             headers: requestHeaders,

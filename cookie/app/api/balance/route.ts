@@ -5,11 +5,11 @@ export async function GET(req: NextRequest) {
     try {
         console.log("in balance");
         const address = req.headers.get("x-address");
-        console.log("add", address);
         if (!address) {
             return NextResponse.json({error: "Address not found"}, {status:404});
         }
 
+        console.log("Going into supa");
         const {data, error} = await supabase
         .from("userwallet")
         .select("balance")
@@ -17,12 +17,15 @@ export async function GET(req: NextRequest) {
         .single();
         
         if (error) {
-            throw new Error(error.message);
+            console.log("Supabase error", error);
+            return NextResponse.json({error}, {status: 500});
         }
+        
         const balance = data?.balance;
-        return NextResponse.json({balance})
+        return NextResponse.json({balance}, {status: 200});
     }catch(error) {
-        NextResponse.json({error}, {status: 500});
+        console.log("Balance error", error);
+        return NextResponse.json({error}, {status: 500});
     }
 
 }
