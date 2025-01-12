@@ -2,6 +2,6 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.SUPABASE_URL as string;
-const supabaseKey = process.env.SUPABASE_KEY as string;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
+const supabase = createClient(supabaseUrl, serviceRoleKey);
 export default supabase;

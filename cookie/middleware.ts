@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
         });
     }catch(error) {
         console.log("middleware error", error);
-        NextResponse.json({error}, {status: 500});
+        return NextResponse.json({error}, {status: 500});
     }
 
 }

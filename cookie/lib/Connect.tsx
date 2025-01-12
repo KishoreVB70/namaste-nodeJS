@@ -28,6 +28,13 @@ function Connect() {
     }
   };
 
+  // Disconnect wallet
+  const handleDisconnect = async (): Promise<void> => {
+    // Reset the balance
+    
+    disconnect();
+  }
+
   // Check JWT
   const checkCookie = useCallback(async() => {
     try {
@@ -116,7 +123,7 @@ function Connect() {
     <div>
         <p>Address: {address}</p>
         <button
-        onClick={() => disconnect()}
+        onClick={handleDisconnect}
         className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
         >
             Disconnect Wallet
