@@ -12,7 +12,6 @@ async function createUser(address: string): Promise<void> {
     }
 }
 
-
 export async function UPDATE(req: NextRequest) {
     const address = req.headers.get("x-address");
     const balance = req.headers.get("x-balance");

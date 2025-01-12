@@ -1,0 +1,1 @@
+export const generateAudioCost = 0.1;
