@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@paypal/paypal-server-sdk": "^0.6.0",
+    "@paypal/paypal-server-sdk": "^0.6.1",
     "@paypal/react-paypal-js": "^8.7.0",
     "@reown/appkit": "^1.6.4",
     "@reown/appkit-adapter-wagmi": "^1.6.4",
