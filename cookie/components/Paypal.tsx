@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { OnApproveData, OnApproveActions } from '@paypal/paypal-js';
 
@@ -9,26 +9,35 @@ function Message({ content }: {content: string}) {
     return <p>{content}</p>;
 }
 
-function Paypal() {
-    const initialOptions = {
-        "clientId":
-            "AQ1Cjya84FV6mMw_5qxeCBcl8RlQqbj99WyGYjpYbOL9-Kt3ZVcQg5y_Lo9Z1qlRNhcHZi2CM9ugCq8z",
-        "enable-funding": "venmo",
-        "disable-funding": "",
-        "buyer-country": "US",
-        currency: "USD",
-        "data-page-type": "product-details",
-        components: "buttons",
-        "data-sdk-integration-source": "developer-studio",
-    };
+const clientID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string;
+const initialOptions = {
+    "clientId": clientID,
+    "enable-funding": "venmo",
+    "disable-funding": "",
+    "buyer-country": "US",
+    currency: "USD",
+    "data-page-type": "product-details",
+    components: "buttons",
+    "data-sdk-integration-source": "developer-studio",
+};
 
+
+function Paypal() {
     const [message, setMessage] = useState("");
-    const [quantity, setQuantity] = useState(2);
+    const [quantity, setQuantity] = useState(1);
+
+    function handleQuantityChange(value: string) {
+        let int = parseInt(value, 10);
+        if (isNaN(int)) {
+            int = 1;
+        }
+        setQuantity(int);
+    }
     
-    const createOrder = async () => {
+    const createOrder = async (quantity: number) => {
         // Check on quantity
         console.log(quantity);
-        if (quantity === 0) {
+        if (quantity <= 0) {
             console.log("zero");
             return
         };
@@ -132,18 +141,20 @@ function Paypal() {
                 type="number"
                 placeholder="Enter Quantity"
                 value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                onChange={(e) => handleQuantityChange(e.target.value)}
                 className="text-black m-5 p-5"
+                min="1"
             />
             <PayPalScriptProvider options={initialOptions}>
                 <PayPalButtons
+                    key={`paypal-button-${quantity}`}
                     style={{
                         shape: "pill",
                         layout: "vertical",
                         color: "gold",
                         label: "pay",
                     }} 
-                    createOrder={createOrder}
+                    createOrder={() => createOrder(quantity)}
                     onApprove={onApprove} 
                 />
             </PayPalScriptProvider>
