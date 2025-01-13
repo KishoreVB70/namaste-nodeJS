@@ -39,7 +39,6 @@ function Connect() {
   const checkCookie = useCallback(async() => {
     try {
       const res = await axios.get("/api/cookie");
-      console.log(res);
       if (res.status === 200) {
         console.log("Found cookie");
         setHasCookie(true);

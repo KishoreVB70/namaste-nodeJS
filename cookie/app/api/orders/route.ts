@@ -5,7 +5,7 @@ import { OrdersController, ApiError, CheckoutPaymentIntent, ApiResponse, Order }
 const ordersController = new OrdersController(client);
 
 type Cart = {
-    quantity: number
+  quantity: number
 }
 
 async function getResponseBody(response: ApiResponse<Order>): Promise<string> {
@@ -34,7 +34,8 @@ async function getResponseBody(response: ApiResponse<Order>): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { cart }: {cart: Cart} = await request.json();
+    const req = await request.json();
+    const { cart }: {cart: [Cart]} = req;
   
     const orderRequest = {
       body: {
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
           {
             amount: {
               currencyCode: 'USD',
-              value: cart.quantity.toString(),
+              value: cart[0].quantity.toString(),
             },
           },
         ],

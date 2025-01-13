@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { OnApproveData, OnApproveActions } from '@paypal/paypal-js';
@@ -22,9 +23,18 @@ function Paypal() {
     };
 
     const [message, setMessage] = useState("");
+    const [quantity, setQuantity] = useState(2);
     
-    const createOrder = async (quantity: string) => {
+    const createOrder = async () => {
+        // Check on quantity
+        console.log(quantity);
+        if (quantity === 0) {
+            console.log("zero");
+            return
+        };
+
         try {
+            console.log("api called");
             const response = await fetch("/api/orders", {
                 method: "POST",
                 headers: {
@@ -35,14 +45,15 @@ function Paypal() {
                 body: JSON.stringify({
                     cart: [
                         {
-                            id: "YOUR_PRODUCT_ID",
-                            quantity,
+                            id: "someid",
+                            quantity: quantity.toString(),
                         },
                     ],
                 }),
             });
 
             const orderData = await response.json();
+            console.log("order data: ", orderData);
 
             if (orderData.id) {
                 return orderData.id;
@@ -61,6 +72,7 @@ function Paypal() {
             );
         }
     }
+    
     const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
         try {
             const response = await fetch(
@@ -115,6 +127,13 @@ function Paypal() {
 
     return (
         <div className="App">
+            <input
+                type="number"
+                placeholder="Enter Quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                className="text-black m-5 p-5"
+            />
             <PayPalScriptProvider options={initialOptions}>
                 <PayPalButtons
                     style={{
