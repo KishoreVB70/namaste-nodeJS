@@ -1,10 +1,10 @@
 "use client"
 import React, { useCallback, useEffect } from 'react'
-import { appKit } from "@/lib/providers";
+import { appKit } from "@/components/providers";
 import { useState } from "react";
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import axios from 'axios';
-import useStore from './store';
+import useStore from '@/lib/store';
 
 function Connect() {
   const [error, setError] = useState<string>('');

@@ -1,5 +1,5 @@
 import Balance from "@/components/Balance";
-import Connect from "@/lib/Connect";
+import Connect from "@/components/Connect";
 
 export default function Home() {
   return (
