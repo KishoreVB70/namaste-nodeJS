@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect } from 'react'
-import { appKit } from "@/components/reownprovider";
+import { appKit } from "@/components/ReownProvider";
 import { useState } from "react";
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import axios from 'axios';
