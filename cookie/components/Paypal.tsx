@@ -74,6 +74,7 @@ function Paypal() {
     }
     
     const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
+        console.log("on approve called")
         try {
             const response = await fetch(
                 `/api/orders/${data.orderID}/capture`,
