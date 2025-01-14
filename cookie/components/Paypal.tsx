@@ -1,5 +1,5 @@
 "use client"
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { OnApproveData, OnApproveActions } from '@paypal/paypal-js';
 
