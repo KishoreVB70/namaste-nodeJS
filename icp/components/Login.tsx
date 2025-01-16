@@ -25,7 +25,8 @@ function Login() {
       })
   
       const account: AccountIdentifier = AccountIdentifier.fromPrincipal({principal});
-      const amountInE8s = BigInt(1 * 1e8);
+      const amountInE8s = BigInt(0 * 1e8);
+      console.log(ledgerCanister);
   
       const transferResult = await ledgerCanister.transfer({
         to: account,
