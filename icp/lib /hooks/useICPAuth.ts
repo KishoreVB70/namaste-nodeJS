@@ -1,10 +1,11 @@
+"use client"
 import { useState, useCallback, useEffect } from "react";
-import { Actor, ActorSubclass, HttpAgent, Identity } from "@dfinity/agent";
+import { HttpAgent, Identity } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
-import { useAuth } from "@/lib/context/AuthContext";
-import { popupCenter } from "@/lib/utils/utils";
-import { ICPAuthReturn } from "@/lib/types";
-import { ii_url, nft_canister_id, nft_canister_id_local } from "@/lib/constants";
+import { useAuth } from "@/lib /context/AuthContext";
+import { popupCenter } from "@/lib /utils/utils";
+import { ICPAuthReturn } from "@/lib /types";
+import { ii_url } from "@/lib /constants";
 
 function useICPAuth(): ICPAuthReturn {
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
@@ -12,27 +13,22 @@ function useICPAuth(): ICPAuthReturn {
 
   const createUserActor = useCallback(async (identity: Identity) => {
     try {
-      const isLocal = process.env.NODE_ENV === 'development'
-
-      const host = isLocal ? 'http://127.0.0.1:4943':'https://ic0.app';
-  
+      
+      const host = "https://ic0.app";
       const agent = await HttpAgent.create({ host: host, identity })
-      const canisterId = isLocal ? nft_canister_id_local : nft_canister_id
-  
-      if (isLocal && process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
-        agent.fetchRootKey().catch((err) => {
-          console.warn(
-            "Unable to fetch root key. Check to ensure that your local replica is running"
-          );
-          console.error(err);
-        });
-      }
-  
-      const nftActor: ActorSubclass<_SERVICE> = Actor.createActor(nftIDL, {
-        agent,
-        canisterId: canisterId,
-      });
-      setUserActor(nftActor);
+      
+      // const isLocal = process.env.NODE_ENV === 'development'
+      // const host = isLocal ? 'http://127.0.0.1:4943':'https://ic0.app';
+      // if (isLocal && process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
+      //   agent.fetchRootKey().catch((err) => {
+      //     console.warn(
+      //       "Unable to fetch root key. Check to ensure that your local replica is running"
+      //     );
+      //     console.error(err);
+      //   });
+      // }
+
+      setUserActor(agent);
     }
     catch (error) {
       console.log("Error creating user actor", error);
@@ -44,8 +40,7 @@ function useICPAuth(): ICPAuthReturn {
       console.warn("AuthClient is not initialized.");
       return;
     }
-    const isLocal = process.env.NODE_ENV === "development";
-    // const identityProvider = isLocal ? ii_url_local : ii_url;
+
     const identityProvider = ii_url;
 
     try {
