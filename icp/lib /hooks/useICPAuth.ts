@@ -1,6 +1,6 @@
 "use client"
 import { useState, useCallback, useEffect } from "react";
-import { HttpAgent, Identity } from "@dfinity/agent";
+// import { HttpAgent, Identity } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import { useAuth } from "@/lib /context/AuthContext";
 import { popupCenter } from "@/lib /utils/utils";
@@ -11,29 +11,29 @@ function useICPAuth(): ICPAuthReturn {
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
   const { setPrincipal, setIsAuthenticated, setUserActor, setIsAuthLoading } = useAuth();
 
-  const createUserActor = useCallback(async (identity: Identity) => {
-    try {
+  // const createUserActor = useCallback(async (identity: Identity) => {
+  //   try {
       
-      const host = "https://ic0.app";
-      const agent = await HttpAgent.create({ host: host, identity })
+  //     const host = "https://ic0.app";
+  //     const agent = await HttpAgent.create({ host: host, identity })
       
-      // const isLocal = process.env.NODE_ENV === 'development'
-      // const host = isLocal ? 'http://127.0.0.1:4943':'https://ic0.app';
-      // if (isLocal && process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
-      //   agent.fetchRootKey().catch((err) => {
-      //     console.warn(
-      //       "Unable to fetch root key. Check to ensure that your local replica is running"
-      //     );
-      //     console.error(err);
-      //   });
-      // }
+  //     // const isLocal = process.env.NODE_ENV === 'development'
+  //     // const host = isLocal ? 'http://127.0.0.1:4943':'https://ic0.app';
+  //     // if (isLocal && process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
+  //     //   agent.fetchRootKey().catch((err) => {
+  //     //     console.warn(
+  //     //       "Unable to fetch root key. Check to ensure that your local replica is running"
+  //     //     );
+  //     //     console.error(err);
+  //     //   });
+  //     // }
 
-      setUserActor(agent);
-    }
-    catch (error) {
-      console.log("Error creating user actor", error);
-    }
-  }, [setUserActor]);
+  //     setUserActor(agent);
+  //   }
+  //   catch (error) {
+  //     console.log("Error creating user actor", error);
+  //   }
+  // }, [setUserActor]);
   
   const loginWithInternetIdentity = useCallback(async () => {
     if (!authClient) {
@@ -50,14 +50,14 @@ function useICPAuth(): ICPAuthReturn {
           const identity = authClient.getIdentity();
           setIsAuthenticated(true);
           setPrincipal(identity.getPrincipal());
-          await createUserActor(identity);
+          setUserActor(identity);
         },
         windowOpenerFeatures: popupCenter(),
       });
     } catch (error) {
       console.error("Login with Internet Identity failed:", error);
     }
-  }, [authClient, setPrincipal, setIsAuthenticated, createUserActor]);
+  }, [authClient, setPrincipal, setIsAuthenticated, setUserActor]);
 
   const logout = useCallback(async () => {
     if (!authClient) {
@@ -104,16 +104,16 @@ function useICPAuth(): ICPAuthReturn {
       const authStatus = await client.isAuthenticated();
       if (authStatus) {
         const identity = client.getIdentity();
+        setUserActor(identity);
         setIsAuthenticated(true);
         setPrincipal(identity.getPrincipal());
-        await createUserActor(identity);
       }
     } catch (error) {
       console.log("Error while intializing auth client: ", error);
     } finally {
       setIsAuthLoading(false);
     }
-  },[setIsAuthenticated, setPrincipal, setIsAuthLoading, createUserActor])
+  },[setIsAuthenticated, setPrincipal, setIsAuthLoading, setUserActor])
 
   useEffect(() => {
     initializeAuthClient();
