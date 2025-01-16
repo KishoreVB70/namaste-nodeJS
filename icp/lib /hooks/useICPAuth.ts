@@ -1,12 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
 import { Actor, ActorSubclass, HttpAgent, Identity } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
-import { _SERVICE } from "@/lib/soodio/soodio.did";
-import { idlFactory as nftIDL} from "@/lib/soodio";
 import { useAuth } from "@/lib/context/AuthContext";
 import { popupCenter } from "@/lib/utils/utils";
 import { ICPAuthReturn } from "@/lib/types";
-import { ii_url, ii_url_local, nft_canister_id, nft_canister_id_local } from "@/lib/constants";
+import { ii_url, nft_canister_id, nft_canister_id_local } from "@/lib/constants";
 
 function useICPAuth(): ICPAuthReturn {
   const [authClient, setAuthClient] = useState<AuthClient | null>(null);
@@ -19,9 +17,10 @@ function useICPAuth(): ICPAuthReturn {
       const host = isLocal ? 'http://127.0.0.1:4943':'https://ic0.app';
   
       const agent = await HttpAgent.create({ host: host, identity })
+      const canisterId = isLocal ? nft_canister_id_local : nft_canister_id
   
       if (isLocal && process.env.NEXT_PUBLIC_DFX_NETWORK !== "ic") {
-        agent.fetchRootKey().catch((err: string) => {
+        agent.fetchRootKey().catch((err) => {
           console.warn(
             "Unable to fetch root key. Check to ensure that your local replica is running"
           );
@@ -29,6 +28,11 @@ function useICPAuth(): ICPAuthReturn {
         });
       }
   
+      const nftActor: ActorSubclass<_SERVICE> = Actor.createActor(nftIDL, {
+        agent,
+        canisterId: canisterId,
+      });
+      setUserActor(nftActor);
     }
     catch (error) {
       console.log("Error creating user actor", error);
