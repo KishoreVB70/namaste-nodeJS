@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError} from '@paypal/paypal-server-sdk';
 import { getResponseBody } from '@/lib/utils';
 
 const ordersController = new OrdersController(client);
 
-export async function POST(request: NextRequest, { params }: { params: { orderID: string } }) {
+export async function POST(request, { params }) {
   const { orderID } = params;
 
   console.log("capture order called");

@@ -1,17 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError, CheckoutPaymentIntent } from '@paypal/paypal-server-sdk';
 import { getResponseBody } from '@/lib/utils';
 const ordersController = new OrdersController(client);
 
-type Cart = {
-  quantity: number
-}
-
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     const req = await request.json();
-    const { cart }: {cart: [Cart]} = req;
+    const { cart } = req;
   
     const orderRequest = {
       body: {
@@ -29,7 +25,7 @@ export async function POST(request: NextRequest) {
     };
     
     const response = await ordersController.ordersCreate(orderRequest);
-    const responseBody: string = await getResponseBody(response);
+    const responseBody = await getResponseBody(response);
     const jsonResponse = JSON.parse(responseBody);
     return NextResponse.json(jsonResponse, { status: response.statusCode });
   } catch (error) {
