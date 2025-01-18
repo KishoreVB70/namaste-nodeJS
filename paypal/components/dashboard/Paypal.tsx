@@ -4,7 +4,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { OnApproveData, OnApproveActions } from '@paypal/paypal-js';
 
 function Message({ content }: {content: string}) {
-    return <p>{content}</p>;
+    return <p className="text-white m-5" >{content}</p>;
 }
 
 const clientID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string;
@@ -121,7 +121,7 @@ function Paypal({quantity}: {quantity: number}) {
     };
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center justify-center">
             <PayPalScriptProvider options={initialOptions}>
                 <PayPalButtons
                     key={`paypal-button-${quantity}`}
