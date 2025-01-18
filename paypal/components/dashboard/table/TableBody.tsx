@@ -1,26 +1,20 @@
+import { TransactionType } from '@/lib/types'
 import React from 'react'
 
-function TableBody() {
+function TableBody({transactions}: {transactions: [TransactionType]}) {
   return (
     <tbody>
-        <tr className="border-b border-neutral-200 dark:border-white/10">
-            <td className="whitespace-nowrap px-6 py-4 font-medium">1</td>
-            <td className="whitespace-nowrap px-6 py-4">Mark</td>
-            <td className="whitespace-nowrap px-6 py-4">Otto</td>
-            <td className="whitespace-nowrap px-6 py-4">@mdo</td>
+      {transactions.map(transaction => 
+        <tr
+          className="border-b border-neutral-200 dark:border-white/10"
+          key={transaction.id}
+        >
+          <td className="whitespace-nowrap px-6 py-4">{transaction.time}</td>
+          <td className="whitespace-nowrap px-6 py-4">{transaction.amount}</td>
+          <td className="whitespace-nowrap px-6 py-4">{transaction.type}</td>
+          <td className="whitespace-nowrap px-6 py-4">{transaction.mode}</td>
         </tr>
-        <tr className="border-b border-neutral-200 dark:border-white/10">
-            <td className="whitespace-nowrap px-6 py-4 font-medium">2</td>
-            <td className="whitespace-nowrap px-6 py-4">Jacob</td>
-            <td className="whitespace-nowrap px-6 py-4">Thornton</td>
-            <td className="whitespace-nowrap px-6 py-4">@fat</td>
-        </tr>
-        <tr className="border-b border-neutral-200 dark:border-white/10">
-            <td className="whitespace-nowrap px-6 py-4 font-medium">3</td>
-            <td className="whitespace-nowrap px-6 py-4">Larry</td>
-            <td className="whitespace-nowrap px-6 py-4">Wild</td>
-            <td className="whitespace-nowrap px-6 py-4">@twitter</td>
-        </tr>
+      )}
     </tbody>
   )
 }

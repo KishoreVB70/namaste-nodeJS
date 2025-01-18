@@ -6,10 +6,10 @@ function TableHead() {
         className="border-b border-neutral-200 font-medium dark:border-white/10"
     >
         <tr>
-            <th scope="col" className="px-6 py-4">#</th>
-            <th scope="col" className="px-6 py-4">First</th>
-            <th scope="col" className="px-6 py-4">Last</th>
-            <th scope="col" className="px-6 py-4">Handle</th>
+            <th scope="col" className="px-6 py-4">Date</th>
+            <th scope="col" className="px-6 py-4">Type</th>
+            <th scope="col" className="px-6 py-4">Amount</th>
+            <th scope="col" className="px-6 py-4">Mode</th>
         </tr>
     </thead>
   )

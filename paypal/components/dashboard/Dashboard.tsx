@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import Funds from '@/components/dashboard/Funds';
-import Transactions from '@/components/dashboard/TransactionList';
+import Transactions from '@/components/dashboard/Transactions';
 import AddFunds from '@/components/dashboard/AddFunds';
 function Dashboard() {
 

@@ -1,14 +1,9 @@
 import React from 'react'
 import TableHead from './table/TableHead';
 import TableBody from './table/TableBody';
+import { TransactionType } from '@/lib/types';
 
-type TransactionType = {
-    id: number,
-    time: string,
-    amount: number,
-    type: string,
-}
-function TransactionTable(transactions: {transactions: [TransactionType]}) {
+function TransactionTable({transactions}: {transactions: [TransactionType]}) {
   console.log(transactions);
   return (
     <div className="flex flex-col">
@@ -19,7 +14,7 @@ function TransactionTable(transactions: {transactions: [TransactionType]}) {
                         className="min-w-full text-left text-sm font-light text-surface dark:text-white"
                     >
                     <TableHead />
-                    <TableBody />
+                    <TableBody transactions={transactions} />
                     </table>
                 </div>
             </div>
