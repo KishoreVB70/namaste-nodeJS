@@ -3,12 +3,9 @@ import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { OnApproveData, OnApproveActions } from '@paypal/paypal-js';
 
-
-// Renders errors or successfull transactions on the screen.
 function Message({ content }: {content: string}) {
     return <p>{content}</p>;
 }
-
 
 const clientID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string;
 const initialOptions = {
@@ -23,25 +20,12 @@ const initialOptions = {
 };
 
 
-function Paypal() {
+function Paypal({quantity}: {quantity: number}) {
     const [message, setMessage] = useState("");
-    const [quantity, setQuantity] = useState(1);
-
-    function handleQuantityChange(value: string) {
-        let int = parseInt(value, 10);
-        if (isNaN(int)) {
-            int = 1;
-        }
-        setQuantity(int);
-    }
-    
+ 
     const createOrder = async (quantity: number) => {
         // Check on quantity
-        console.log(quantity);
-        if (quantity <= 0) {
-            console.log("zero");
-            return
-        };
+        if (quantity <= 0) return
 
         try {
             console.log("api called");
@@ -137,15 +121,7 @@ function Paypal() {
     };
 
     return (
-        <div className="App">
-            <input
-                type="number"
-                placeholder="Enter Quantity"
-                value={quantity}
-                onChange={(e) => handleQuantityChange(e.target.value)}
-                className="text-black m-5 p-5"
-                min="1"
-            />
+        <div className="flex flex-col">
             <PayPalScriptProvider options={initialOptions}>
                 <PayPalButtons
                     key={`paypal-button-${quantity}`}
