@@ -3,6 +3,7 @@ import TableHead from './table/TableHead';
 import TableBody from './table/TableBody';
 import { TransactionType } from '@/lib/types';
 
+//https://tw-elements.com/docs/standard/data/tables/
 function TransactionTable({transactions}: {transactions: [TransactionType]}) {
   console.log(transactions);
   return (
@@ -11,7 +12,7 @@ function TransactionTable({transactions}: {transactions: [TransactionType]}) {
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                 <div className="overflow-hidden">
                     <table
-                        className="min-w-full text-left text-sm font-light text-surface dark:text-white"
+                        className="min-w-full text-left text-sm font-light text-surface dark:text-white border border-neutral-200 dark:border-white"
                     >
                     <TableHead />
                     <TableBody transactions={transactions} />
