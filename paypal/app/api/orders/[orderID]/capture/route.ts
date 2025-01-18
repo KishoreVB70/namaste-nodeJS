@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError} from '@paypal/paypal-server-sdk';
 import { getResponseBody } from '@/lib/utils';
+import { updateBalance } from '@/lib/supabase';
 
 const ordersController = new OrdersController(client);
 
-export async function POST(request: NextRequest, { params }: { params: { orderID: string } }) {
-  const { orderID } = params;
+export async function POST(req: NextRequest, { params }: { params: { orderID: string } }) {
+  const {orderID }= params;
+  console.log("Order ID: ", orderID);
 
-  console.log("capture order called");
+  if(!orderID) {
+    return NextResponse.json({ error: "Order ID" }, { status: 400 });
+  }
   try {
     const captureRequest = {
       id: orderID,
@@ -17,9 +21,17 @@ export async function POST(request: NextRequest, { params }: { params: { orderID
 
     const response = await ordersController.ordersCapture(captureRequest);
     const responseBody = await getResponseBody(response);
-    const jsonResponse = JSON.parse(responseBody);
+    const orderData = JSON.parse(responseBody);
 
-    return NextResponse.json(jsonResponse, { status: response.statusCode });
+    const errorDetail = orderData?.details?.[0];
+
+    if(!errorDetail) {
+      const amount = orderData.purchase_units[0].payments.captures[0].amount.value;
+      const address = orderData.purchase_units[0].payments.captures[0].custom_id;
+      await updateBalance(amount, address)
+    }
+
+    return NextResponse.json(orderData, { status: response.statusCode });
   } catch (error) {
     if (error instanceof ApiError) {
       console.error('PayPal API Error:', error.message);

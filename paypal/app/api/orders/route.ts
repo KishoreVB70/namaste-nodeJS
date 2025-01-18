@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
               currencyCode: 'USD',
               value: cart[0].quantity.toString(),
             },
-          },
+            customId: "bot"
+          }
         ],
       },
       prefer: 'return=minimal',

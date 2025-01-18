@@ -100,17 +100,8 @@ function Paypal({quantity}: {quantity: number}) {
             } else {
                 // (3) Successful transaction -> Show confirmation or thank you message
                 // Or go to another URL:  actions.redirect('thank_you.html');
-                const transaction =
-                    orderData.purchase_units[0].payments
-                        .captures[0];
-                setMessage(
-                    `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
-                );
-                console.log(
-                    "Capture result",
-                    orderData,
-                    JSON.stringify(orderData, null, 2)
-                );
+                successfulOrder(orderData);
+
             }
         } catch (error) {
             console.error(error);
@@ -119,6 +110,21 @@ function Paypal({quantity}: {quantity: number}) {
             );
         }
     };
+
+    // eslint-disable-next-line
+    const successfulOrder = async(orderData: any) => {
+        const transaction =
+        orderData.purchase_units[0].payments
+            .captures[0];
+        setMessage(
+            `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
+        );
+        console.log(
+            "Capture result",
+            orderData,
+            JSON.stringify(orderData, null, 2)
+        );
+    }
 
     return (
         <div className="flex flex-col items-center justify-center">

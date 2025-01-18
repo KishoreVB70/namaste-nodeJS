@@ -1,38 +1,18 @@
-import supabase from "@/lib/supabase";
+import supabase, { updateBalance } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function UPDATE(req: NextRequest) {
     const address = req.headers.get("x-address");
     const {amount} =  await req.json();
-    if (!amount) {
+    if (!amount || !address) {
         return NextResponse.json({error: "No"})
     }
 
-    // Get existing balance
-    const {data, error} = await supabase
-    .from("userwallet")
-    .select("balance")
-    .eq("address", address)
-    .single();
-
-    if (error) {
-        return NextResponse.json({error: "Balance query error"}, {status:401});
-    }
-
-    const oldBalance = data.balance;
-    const updatedBalance = oldBalance + amount;
-    {
-        const {error} = await supabase
-        .from("userwallet")
-        .update({
-            Balance: updatedBalance
-        })
-        .eq("address", address);
-    
-        if (error) {
-            return NextResponse.json({error: "Balance query error"}, {status:401});
-        }
+    try {
+        await updateBalance(amount, address);
         return NextResponse.json({message: "updated user balance"}, {status:200});
+    } catch(error) {
+        return NextResponse.json({error: error}, {status:401});
     }
 }
 
@@ -44,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     try {
         const {data, error} = await supabase
-        .from("userwallet")
+        .from("user_wallet")
         .select("balance")
         .eq("address", address)
         .single();
