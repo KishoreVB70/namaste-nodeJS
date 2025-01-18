@@ -3,7 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function UPDATE(req: NextRequest) {
     const address = req.headers.get("x-address");
-    const balance = req.headers.get("x-balance");
+    const {amount} =  await req.json();
+    if (!amount) {
+        return NextResponse.json({error: "No"})
+    }
 
     // Get existing balance
     const {data, error} = await supabase
@@ -17,7 +20,7 @@ export async function UPDATE(req: NextRequest) {
     }
 
     const oldBalance = data.balance;
-    const updatedBalance = oldBalance + balance;
+    const updatedBalance = oldBalance + amount;
     {
         const {error} = await supabase
         .from("userwallet")
