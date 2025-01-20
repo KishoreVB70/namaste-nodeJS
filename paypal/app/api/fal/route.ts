@@ -18,8 +18,6 @@ export async function POST(req: NextRequest) {
     await sBaseUpdateBalance(-generateAudioCost, address);
 
     return route.POST(req);
-
-
   }catch(error) {
     return NextResponse.json({error}, {status: 500});
   }
