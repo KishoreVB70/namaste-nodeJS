@@ -1,5 +1,6 @@
 "server only"
 import { createClient } from '@supabase/supabase-js'
+import { TransactionDetails, TransactionPayload } from './types';
 
 const supabaseUrl = process.env.SUPABASE_URL as string;
 const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
@@ -9,7 +10,7 @@ export default supabase;
 export async function updateBalance(amount: number, address: string) {
     // Get existing balance
     const {data, error} = await supabase
-    .from("userwallet")
+    .from("user_wallet")
     .select("balance")
     .eq("address", address)
     .single();
@@ -22,7 +23,7 @@ export async function updateBalance(amount: number, address: string) {
     const updatedBalance = oldBalance + amount;
     {
         const {error} = await supabase
-        .from("userwallet")
+        .from("user_wallet")
         .update({
             Balance: updatedBalance
         })
@@ -32,4 +33,36 @@ export async function updateBalance(amount: number, address: string) {
             throw new Error("Balance query error");
         }
     }
+}
+
+export async function addTransaction(transactionDetails: TransactionDetails, address: string) {
+    const {data, error}= await supabase
+    .from("user_wallet")
+    .select("user_id")
+    .eq("address",address)
+    .single();
+
+    if (error) {
+        console.log(error);
+        throw new Error("Query error");
+    }
+
+    const userID: string = data.user_id;
+    const transactionPayload: TransactionPayload = {...transactionDetails, userID};
+    {
+        const {error} = await supabase
+        .from('transactions')
+        .insert({transactionPayload});
+
+        if (error) {
+            console.log(error);
+            throw new Error("Insert error");
+        }
+    }
+
+
+
+
+
+  
 }

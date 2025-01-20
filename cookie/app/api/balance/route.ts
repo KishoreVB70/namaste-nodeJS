@@ -18,7 +18,7 @@ export async function UPDATE(req: NextRequest) {
 
     // Get existing balance
     const {data, error} = await supabase
-    .from("userwallet")
+    .from("user_wallet")
     .select("balance")
     .eq("address", address)
     .single();
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
         }
 
         const {data, error} = await supabase
-        .from("userwallet")
+        .from("user_wallet")
         .select("balance")
         .eq("address", address)
         .single();

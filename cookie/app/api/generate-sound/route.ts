@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
     // Get the balance
     const {data, error} = await supabase
-    .from("userwallet")
+    .from("user_wallet")
     .select("balance")
     .eq("adddress", address)
     .single();
