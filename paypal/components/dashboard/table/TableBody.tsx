@@ -1,7 +1,7 @@
 import { TransactionType } from '@/lib/types'
 import React from 'react'
 
-function TableBody({transactions}: {transactions: TransactionType[]}) {z
+function TableBody({transactions}: {transactions: TransactionType[]}) {
   return (
     <tbody>
       {transactions.map(transaction => 
