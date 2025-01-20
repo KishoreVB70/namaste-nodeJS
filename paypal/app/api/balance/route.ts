@@ -1,7 +1,7 @@
 import supabase, { updateBalance } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function UPDATE(req: NextRequest) {
+export async function PUT(req: NextRequest) {
     const address = req.headers.get("x-address");
     const {amount} =  await req.json();
     if (!amount || !address) {

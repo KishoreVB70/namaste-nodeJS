@@ -25,12 +25,13 @@ export async function updateBalance(amount: number, address: string) {
         const {error} = await supabase
         .from("user_wallet")
         .update({
-            Balance: updatedBalance
+            balance: updatedBalance
         })
         .eq("address", address);
     
         if (error) {
-            throw new Error("Balance query error");
+            console.log(error);
+            throw new Error("Balance Update error");
         }
     }
 }
@@ -48,11 +49,15 @@ export async function addTransaction(transactionDetails: TransactionDetails, add
     }
 
     const userID: string = data.user_id;
-    const transactionPayload: TransactionPayload = {...transactionDetails, userID};
     {
         const {error} = await supabase
         .from('transactions')
-        .insert({transactionPayload});
+        .insert({
+            "user_id": userID,
+            "transaction_mode": transactionDetails.mode,
+            "amount": transactionDetails.amount,
+            "transaction_type": transactionDetails.type
+        });
 
         if (error) {
             console.log(error);

@@ -1,37 +1,45 @@
-import { writeFile } from "fs/promises";
-import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
+export async function GET(){
+  const message = "This is a valid response!";
+  return new Response(message, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
+}  
 
-// Allow parsing of `multipart/form-data`
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// import { writeFile } from "fs/promises";
+// import { NextRequest, NextResponse } from "next/server";
+// import { join } from "path";
 
-// Handle the file upload
-export async function POST(request: NextRequest) {
-  try {
-    const data = await request.formData();
-    const file: File | null = data.get("file") as unknown as File;
+// export const runtime = 'nodejs'; // or 'edge' based on your runtime requirements
 
-    if (!file) {
-      NextResponse.json({message: "Improper file"}, {status: 400});
-    }
+// // If you need body parsing off for the route:
+// export const disableBodyParser = true;
 
-    // if (!file.type == "wav")
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const path = join("/", "tmp", file.name);
+// // Handle the file upload
+// export async function POST(request: NextRequest) {
+//   try {
+//     const data = await request.formData();
+//     const file: File | null = data.get("file") as unknown as File;
 
-    void await writeFile(path, buffer);
+//     if (!file) {
+//       NextResponse.json({message: "Improper file"}, {status: 400});
+//     }
 
-    return NextResponse.json({ message: "File uploaded successfully!" });
-  } catch (error) {
-    console.error("Error handling upload:", error);
-    return NextResponse.json(
-      { error: "Failed to upload the file." },
-      { status: 500 }
-    );
-  }
-}
+//     // if (!file.type == "wav")
+//     const bytes = await file.arrayBuffer();
+//     const buffer = Buffer.from(bytes);
+//     const path = join("/", "tmp", file.name);
+
+//     void await writeFile(path, buffer);
+
+//     return NextResponse.json({ message: "File uploaded successfully!" });
+//   } catch (error) {
+//     console.error("Error handling upload:", error);
+//     return NextResponse.json(
+//       { error: "Failed to upload the file." },
+//       { status: 500 }
+//     );
+//   }
+// }
