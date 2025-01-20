@@ -4,7 +4,7 @@ import TableBody from './table/TableBody';
 import { TransactionType } from '@/lib/types';
 
 //https://tw-elements.com/docs/standard/data/tables/
-function TransactionTable({transactions}: {transactions: [TransactionType]}) {
+function TransactionTable({transactions}: {transactions: TransactionType[]}) {
   return (
     <div className="flex flex-col">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

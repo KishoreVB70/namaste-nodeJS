@@ -4,21 +4,14 @@ import TransactionTable from "@/components/dashboard/TransactionTable";
 import { TransactionType } from '@/lib/types';
 import axios from 'axios';
 
-const trans: TransactionType = {
-  id: 1,
-  time: "20-7-25",
-  amount:2,
-  type: "Input",
-  mode: "Paypal"
-}
-
 function Transactions() {
-  const [transactions, setTransactions] = useState<[TransactionType]>([trans]);
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
   const getTransactions = async() => {
     try {
       const transactions = await axios.get("/api/transactions");
       console.log(transactions.data.data);
+      setTransactions(transactions.data.data);
     } catch(error) {
       console.log(error);
     }
@@ -26,7 +19,6 @@ function Transactions() {
 
   useEffect(() => {
     getTransactions();
-    setTransactions([trans]);
   }, [])
   return (
     <div className='flex flex-col items-center m-5'>
