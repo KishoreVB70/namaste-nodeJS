@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import TransactionTable from "@/components/dashboard/TransactionTable";
 import { TransactionType } from '@/lib/types';
+import axios from 'axios';
 
 const trans: TransactionType = {
   id: 1,
@@ -14,7 +15,17 @@ const trans: TransactionType = {
 function Transactions() {
   const [transactions, setTransactions] = useState<[TransactionType]>([trans]);
 
+  const getTransactions = async() => {
+    try {
+      const transactions = await axios.get("/api/transactions");
+      console.log(transactions.data.data);
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
+    getTransactions();
     setTransactions([trans]);
   }, [])
   return (

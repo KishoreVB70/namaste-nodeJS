@@ -1,12 +1,27 @@
 "server only"
 import { createClient } from '@supabase/supabase-js'
-import { TransactionDetails, TransactionPayload } from './types';
+import { TransactionDetails } from './types';
 
 const supabaseUrl = process.env.SUPABASE_URL as string;
 const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 export default supabase;
 
+
+export async function getUserID(address: string) {
+    const {data, error}= await supabase
+    .from("user_wallet")
+    .select("user_id")
+    .eq("address",address)
+    .single();
+
+    if (error) {
+        console.log(error);
+        throw new Error("Query error");
+    }
+
+    return data.user_id as string;
+}
 export async function updateBalance(amount: number, address: string) {
     // Get existing balance
     const {data, error} = await supabase
@@ -37,37 +52,18 @@ export async function updateBalance(amount: number, address: string) {
 }
 
 export async function addTransaction(transactionDetails: TransactionDetails, address: string) {
-    const {data, error}= await supabase
-    .from("user_wallet")
-    .select("user_id")
-    .eq("address",address)
-    .single();
+    const userID: string = await getUserID(address);
+    const {error} = await supabase
+    .from('transactions')
+    .insert({
+        "user_id": userID,
+        "transaction_mode": transactionDetails.mode,
+        "amount": transactionDetails.amount,
+        "transaction_type": transactionDetails.type
+    });
 
     if (error) {
         console.log(error);
-        throw new Error("Query error");
+        throw new Error("Insert error");
     }
-
-    const userID: string = data.user_id;
-    {
-        const {error} = await supabase
-        .from('transactions')
-        .insert({
-            "user_id": userID,
-            "transaction_mode": transactionDetails.mode,
-            "amount": transactionDetails.amount,
-            "transaction_type": transactionDetails.type
-        });
-
-        if (error) {
-            console.log(error);
-            throw new Error("Insert error");
-        }
-    }
-
-
-
-
-
-  
 }
