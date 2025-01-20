@@ -1,4 +1,4 @@
-import supabase, { updateBalance } from "@/lib/supabase";
+import { sBaseGetBalance, sBaseUpdateBalance } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest) {
     }
 
     try {
-        await updateBalance(amount, address);
+        await sBaseUpdateBalance(amount, address);
         return NextResponse.json({message: "updated user balance"}, {status:200});
     } catch(error) {
         return NextResponse.json({error: error}, {status:401});
@@ -23,18 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const {data, error} = await supabase
-        .from("user_wallet")
-        .select("balance")
-        .eq("address", address)
-        .single();
-    
-        if (error) {
-            console.log("Supabase error", error);
-            return NextResponse.json({error}, {status: 500});
-        }
-    
-        const balance = data?.balance;
+        const balance = await sBaseGetBalance(address);
         return NextResponse.json({balance}, {status: 200});
     }catch(error) {
         console.log("Balance error", error);

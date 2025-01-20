@@ -41,5 +41,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/balance', '/api/transactions'],
+    matcher: ['/api/balance', '/api/transactions', '/api/fal'],
 };

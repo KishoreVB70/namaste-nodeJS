@@ -1,5 +1,5 @@
 import { transactionPageSize } from "@/lib/constants";
-import supabase, { getUserID } from "@/lib/supabase";
+import supabase, { sBaseGetUserID } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
         if (!address) {
             return NextResponse.json({error: "Wrong address"}, {status: 400});
         }
-        const userID: string = await getUserID(address);
+        const userID: string = await sBaseGetUserID(address);
 
         const {data, error} = await supabase
         .from("transactions")

@@ -7,8 +7,20 @@ const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 export default supabase;
 
+export async function sBaseGetBalance(address: string) {
+    const {data, error} = await supabase
+    .from("user_wallet")
+    .select("balance")
+    .eq("address", address)
+    .single();
 
-export async function getUserID(address: string) {
+    if (error) {
+        throw new Error(error?.details);
+    }
+
+    return data.balance;
+}
+export async function sBaseGetUserID(address: string) {
     const {data, error}= await supabase
     .from("user_wallet")
     .select("user_id")
@@ -22,7 +34,8 @@ export async function getUserID(address: string) {
 
     return data.user_id as string;
 }
-export async function updateBalance(amount: number, address: string) {
+
+export async function sBaseUpdateBalance(amount: number, address: string) {
     // Get existing balance
     const {data, error} = await supabase
     .from("user_wallet")
@@ -51,7 +64,7 @@ export async function updateBalance(amount: number, address: string) {
     }
 }
 
-export async function addTransaction(transactionDetails: TransactionDetails, address: string) {
+export async function sBaseAddTransaction(transactionDetails: TransactionDetails, address: string) {
     const userID: string = await getUserID(address);
     const {error} = await supabase
     .from('transactions')

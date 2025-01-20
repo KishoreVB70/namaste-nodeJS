@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError} from '@paypal/paypal-server-sdk';
 import { getResponseBody } from '@/lib/utils';
-import { addTransaction, updateBalance } from '@/lib/supabase';
 import { TransactionDetails } from '@/lib/types';
+import { sBaseAddTransaction, sBaseUpdateBalance } from '@/lib/supabase';
 
 const ordersController = new OrdersController(client);
 
@@ -30,13 +30,13 @@ export async function POST(req: NextRequest, { params }: { params: { orderID: st
       const amountVal = orderData.purchase_units[0].payments.captures[0].amount.value as string;
       const amount = parseInt(amountVal);
       const address = orderData.purchase_units[0].payments.captures[0].custom_id as string;
-      await updateBalance(amount, address)
+      await sBaseUpdateBalance(amount, address)
       const transactionDetails: TransactionDetails = {
         amount,
         "mode": "paypal",
         "type": "credit"
       }
-      await addTransaction(transactionDetails,address);
+      await sBaseAddTransaction(transactionDetails,address);
     }
 
     return NextResponse.json(orderData, { status: response.statusCode });
