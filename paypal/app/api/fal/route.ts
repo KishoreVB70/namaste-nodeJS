@@ -1,5 +1,5 @@
 import { generateAudioCost } from "@/lib/constants";
-import { sBaseGetBalance } from "@/lib/supabase";
+import { sBaseGetBalance, sBaseUpdateBalance } from "@/lib/supabase";
 import { route } from "@fal-ai/server-proxy/nextjs";
 import { NextRequest, NextResponse } from "next/server";
  
@@ -10,13 +10,12 @@ export async function POST(req: NextRequest) {
   }
   try {
     const balance = await sBaseGetBalance(address);
-    console.log(balance);
     if (balance < generateAudioCost) {
       return NextResponse.json({error: "Inadequate funds"}, {status: 400})
     }
 
     // Update balance
-
+    await sBaseUpdateBalance(-generateAudioCost, address);
 
     return route.POST(req);
 
