@@ -1,4 +1,4 @@
-import useUserBalanceStore from '@/lib/store'
+import useUserBalanceStore from '@/lib/state/balanceStore'
 import React from 'react'
 
 function Funds() {
