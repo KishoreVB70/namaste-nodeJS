@@ -1,5 +1,6 @@
-import { generateAudioCost } from "@/lib/constants";
-import { sBaseGetBalance, sBaseUpdateBalance } from "@/lib/supabase";
+import { generateAudioCost } from "@/lib/utils/constants";
+import { sBaseAddTransaction, sBaseGetBalance, sBaseUpdateBalance } from "@/lib/supabase";
+import { TransactionDetails } from "@/lib/utils/types";
 import { route } from "@fal-ai/server-proxy/nextjs";
 import { NextRequest, NextResponse } from "next/server";
  
@@ -16,6 +17,14 @@ export async function POST(req: NextRequest) {
 
     // Update balance
     await sBaseUpdateBalance(-generateAudioCost, address);
+
+    const transactionDetails: TransactionDetails = {
+      amount: generateAudioCost,
+      type: "debit",
+    }
+
+    // Add transaction
+    await sBaseAddTransaction(transactionDetails, address);
 
     return route.POST(req);
   }catch(error) {

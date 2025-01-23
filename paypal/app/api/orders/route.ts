@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError, CheckoutPaymentIntent } from '@paypal/paypal-server-sdk';
-import { getResponseBody } from '@/lib/utils';
+import { getResponseBody } from '@/lib/utils/utils';
 const ordersController = new OrdersController(client);
 
 type Cart = {

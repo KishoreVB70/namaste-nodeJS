@@ -1,4 +1,4 @@
-import { transactionPageSize } from "@/lib/constants";
+import { transactionPageSize } from "@/lib/utils/constants";
 import supabase, { sBaseGetUserID } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
         const start = (page - 1) * transactionPageSize;
         const end = start + transactionPageSize - 1;
 
-        console.log(start, end);
         const address = req.headers.get("x-address");
         if (!address) {
             return NextResponse.json({error: "Wrong address"}, {status: 400});
@@ -22,8 +21,6 @@ export async function GET(req: NextRequest) {
         .select("*")
         .eq("user_id", userID)
         .range(start, end);
-
-        console.log(data);
 
         if (error) {
             return NextResponse.json({error: "Transaction query error"}, {status: 500});

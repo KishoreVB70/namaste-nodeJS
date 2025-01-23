@@ -1,6 +1,6 @@
 import "server-only"
 import { createClient } from '@supabase/supabase-js'
-import { TransactionDetails } from './types';
+import { TransactionDetails } from '@/lib/utils/types';
 
 const supabaseUrl = process.env.SUPABASE_URL as string;
 const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
@@ -65,18 +65,18 @@ export async function sBaseUpdateBalance(amount: number, address: string) {
 }
 
 export async function sBaseAddTransaction(transactionDetails: TransactionDetails, address: string) {
-    const userID: string = await getUserID(address);
+    const userID: string = await sBaseGetUserID(address);
     const {error} = await supabase
     .from('transactions')
     .insert({
         "user_id": userID,
-        "transaction_mode": transactionDetails.mode,
+        "transaction_mode": transactionDetails.mode || null,
         "amount": transactionDetails.amount,
         "transaction_type": transactionDetails.type
     });
 
     if (error) {
-        console.log(error);
+        console.log("Supabase error: ", error);
         throw new Error("Insert error");
     }
 }

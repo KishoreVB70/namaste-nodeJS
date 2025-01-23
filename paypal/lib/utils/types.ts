@@ -8,7 +8,7 @@ export type TransactionType = {
 export type TransactionDetails = {
     amount: number,
     type: string,
-    mode: string
+    mode?: string
 }
 
 export type TransactionPayload = {

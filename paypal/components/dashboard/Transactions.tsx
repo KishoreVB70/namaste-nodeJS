@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from 'react'
 import TransactionTable from "@/components/dashboard/TransactionTable";
-import { TransactionType } from '@/lib/types';
+import { TransactionType } from '@/lib/utils/types';
 import axios from 'axios';
 
 function Transactions() {

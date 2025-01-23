@@ -1,7 +1,7 @@
 import React from 'react'
 import TableHead from './table/TableHead';
 import TableBody from './table/TableBody';
-import { TransactionType } from '@/lib/types';
+import { TransactionType } from '@/lib/utils/types';
 
 //https://tw-elements.com/docs/standard/data/tables/
 function TransactionTable({transactions}: {transactions: TransactionType[]}) {

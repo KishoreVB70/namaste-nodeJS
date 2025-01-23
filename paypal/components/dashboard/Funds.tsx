@@ -1,3 +1,4 @@
+"use client"
 import useUserBalanceStore from '@/lib/state/balanceStore'
 import React from 'react'
 

@@ -1,4 +1,4 @@
-import { TransactionType } from '@/lib/types'
+import { TransactionType } from '@/lib/utils/types'
 import React from 'react'
 
 function TableBody({transactions}: {transactions: TransactionType[]}) {

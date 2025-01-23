@@ -1,4 +1,3 @@
-"use client"
 import React from 'react'
 import Funds from '@/components/dashboard/Funds';
 import Transactions from '@/components/dashboard/Transactions';

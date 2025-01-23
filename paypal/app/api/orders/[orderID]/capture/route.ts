@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import client from '@/lib/paypal';
 import { OrdersController, ApiError} from '@paypal/paypal-server-sdk';
-import { getResponseBody } from '@/lib/utils';
-import { TransactionDetails } from '@/lib/types';
+import { getResponseBody } from '@/lib/utils/utils';
+import { TransactionDetails } from '@/lib/utils/types';
 import { sBaseAddTransaction, sBaseUpdateBalance } from '@/lib/supabase';
 
 const ordersController = new OrdersController(client);
