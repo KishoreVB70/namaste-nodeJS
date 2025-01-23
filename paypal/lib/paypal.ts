@@ -1,4 +1,4 @@
-"server only"
+import "server-only"
 import { Client, Environment, LogLevel } from '@paypal/paypal-server-sdk';
 
 const client = new Client({
