@@ -1,22 +1,17 @@
 "use client";
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import TransactionTable from "@/components/dashboard/TransactionTable";
-import { TransactionType } from '@/lib/utils/types';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { getTransactions } from '@/lib/apiUtils';
 
 function Transactions() {
-  const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [page, setPage] = useState(1);
-
-  const getTransactions = useCallback(async(page: number) => {
-    try {
-      const transactions = await axios.get(`/api/transactions/?page=${page}`);
-      console.log(transactions.data.data);
-      setTransactions(transactions.data.data);
-    } catch(error) {
-      console.log(error);
-    }
-  }, [])
+  const { data: transactions, isLoading} = useQuery({
+    queryKey: ["transactions"],
+    queryFn: async () => {
+      return getTransactions(page);
+    },
+  })
 
   const nextPage = async() => {
     setPage(page => page + 1);
@@ -28,33 +23,37 @@ function Transactions() {
     getTransactions(page - 1);
   }
 
-  useEffect(() => {
-    getTransactions(1);
-  }, [getTransactions])
-  return (
-    <div className='flex flex-col items-center m-5'>
-      <h1 className='font-bold text-3xl'>Transactions</h1>
-      <TransactionTable transactions={transactions} />
-      {transactions.length === 10 && (
-        <button 
-          className='border border-white p-3 m-2 hover:text-black hover:bg-white'
-          onClick={nextPage}  
-        >
-          Next page
-        </button>
-      )}
+  if (isLoading) {
+    return <p>Loading</p>
+  }
 
-      {page >  1 && (
-        <button 
-          className='border border-white p-3 m-2 hover:text-black hover:bg-white'
-          onClick={previousPage}  
-        >
-          Previous page
-        </button>
-      )}
+  if (transactions) {
+    return (
+      <div className='flex flex-col items-center m-5'>
+        <h1 className='font-bold text-3xl'>Transactions</h1>
+        <TransactionTable transactions={transactions} />
+        {transactions.length === 10 && (
+          <button 
+            className='border border-white p-3 m-2 hover:text-black hover:bg-white'
+            onClick={nextPage}  
+          >
+            Next page
+          </button>
+        )}
+  
+        {page >  1 && (
+          <button 
+            className='border border-white p-3 m-2 hover:text-black hover:bg-white'
+            onClick={previousPage}  
+          >
+            Previous page
+          </button>
+        )}
+  
+      </div>
+    )
+  }
 
-    </div>
-  )
 }
 
 export default Transactions
