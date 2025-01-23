@@ -49,6 +49,9 @@ export async function sBaseUpdateBalance(amount: number, address: string) {
 
     const oldBalance = data.balance;
     const updatedBalance = oldBalance + amount;
+
+    console.log("old", oldBalance)
+    console.log("new", updatedBalance)
     {
         const {error} = await supabase
         .from("user_wallet")

@@ -12,7 +12,7 @@ function QueryProvider({children}: {children: ReactNode}) {
     return (
         // Provide the client to your App
         <QueryClientProvider client={queryClient}>
-        {children}
+            {children}
         </QueryClientProvider>
     )
 }

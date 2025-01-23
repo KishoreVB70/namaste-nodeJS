@@ -7,10 +7,11 @@ import { getTransactions } from '@/lib/apiUtils';
 function Transactions() {
   const [page, setPage] = useState(1);
   const { data: transactions, isLoading} = useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transactions", page],
     queryFn: async () => {
       return getTransactions(page);
     },
+    staleTime: Infinity
   })
 
   const nextPage = async() => {

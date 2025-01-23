@@ -5,7 +5,6 @@ import Funds from '@/components/dashboard/Funds';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-
 fal.config({
   proxyUrl: "/api/fal",
 });
@@ -13,23 +12,25 @@ fal.config({
 function GenerateAISound() {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn:async() => {
+    mutationFn: async() => {
       await axios.put("/api/balance");
     },
-    mutationKey: ["transactions"],
     onSuccess: () => {
+      console.log("On success");
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['balance'] });
     }
   })
+
   async function generateSound() {
     try {
       const { data, requestId } = await fal.subscribe("fal-ai/stable-audio", {
         input: {
-          prompt: "",
+          prompt: "small audio",
           ...(
             {
               seconds_start: 0,
-              seconds_total: 2,
+              seconds_total: 3,
               steps: 100
             }
           )
@@ -38,7 +39,9 @@ function GenerateAISound() {
         pollInterval:3000,
       });
       console.log(data, requestId);
+      console.log("Mutate going to be called");
       mutate();
+      console.log("Mutate called");
     } catch(error) {
       console.log(error);
     }

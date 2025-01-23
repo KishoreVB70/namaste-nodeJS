@@ -1,9 +1,9 @@
 "use client"
-import useUserBalanceStore from '@/lib/state/balanceStore'
+import useBalance from '@/lib/hooks/useBalance';
 import React from 'react'
 
 function Funds() {
-  const {balance} = useUserBalanceStore();
+  const { data: balance } = useBalance();
   return (
     <div className='m-5 flex flex-col justify-center items-center'>
       <h1 className='text-3xl'>Balance: {balance} USD</h1>
