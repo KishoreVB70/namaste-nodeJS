@@ -25,9 +25,6 @@ export async function GET(req: NextRequest) {
         if (error) {
             return NextResponse.json({error: "Transaction query error"}, {status: 500});
         }
-
-        console.log(data);
-
         return NextResponse.json({data}, {status: 200});
     }catch(error) {
         console.log(error);

@@ -1,15 +1,15 @@
 import { sBaseGetBalance, sBaseUpdateBalance } from "@/lib/supabase";
+import { generateAudioCost } from "@/lib/utils/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
     const address = req.headers.get("x-address");
-    const {amount} =  await req.json();
-    if (!amount || !address) {
+    if (!address) {
         return NextResponse.json({error: "No"})
     }
 
     try {
-        await sBaseUpdateBalance(amount, address);
+        await sBaseUpdateBalance(generateAudioCost, address);
         return NextResponse.json({message: "updated user balance"}, {status:200});
     } catch(error) {
         return NextResponse.json({error: error}, {status:401});

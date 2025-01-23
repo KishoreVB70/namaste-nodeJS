@@ -2,7 +2,9 @@
 import React from 'react'
 import { fal } from "@fal-ai/client";
 import Funds from '@/components/dashboard/Funds';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+
 
 fal.config({
   proxyUrl: "/api/fal",
@@ -10,23 +12,36 @@ fal.config({
 
 function GenerateAISound() {
   const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn:async() => {
+      await axios.put("/api/balance");
+    },
+    mutationKey: ["transactions"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    }
+  })
   async function generateSound() {
-    const { data, requestId } = await fal.subscribe("fal-ai/stable-audio", {
-      input: {
-        prompt: "",
-        ...(
-          {
-            seconds_start: 0,
-            seconds_total: 2,
-            steps: 100
-          }
-        )
-      },
-      logs: true,
-      pollInterval:3000,
-    });
-    console.log(data, requestId);
-    queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    try {
+      const { data, requestId } = await fal.subscribe("fal-ai/stable-audio", {
+        input: {
+          prompt: "",
+          ...(
+            {
+              seconds_start: 0,
+              seconds_total: 2,
+              steps: 100
+            }
+          )
+        },
+        logs: true,
+        pollInterval:3000,
+      });
+      console.log(data, requestId);
+      mutate();
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   return (

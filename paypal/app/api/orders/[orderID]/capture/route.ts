@@ -9,7 +9,6 @@ const ordersController = new OrdersController(client);
 
 export async function POST(req: NextRequest, { params }: { params: { orderID: string } }) {
   const {orderID }= params;
-  console.log("Order ID: ", orderID);
 
   if(!orderID) {
     return NextResponse.json({ error: "Order ID" }, { status: 400 });
