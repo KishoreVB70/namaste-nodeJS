@@ -5,7 +5,6 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LibraryFormData, librarySchema } from '@/lib/schema';
 
-// Label component for form fields
 const Label = ({ children }: { children: ReactNode }) => (
   <label className="block text-white-a700 font-poppins mb-1 self-end !font-actor sm:self-auto text-[16px] font-semibold not-italic">
     {children}
@@ -28,7 +27,6 @@ const Form = () => {
     // Check if library name is unique
     const isUniqueResult = false;
     if (!isUniqueResult) {
-      console.log("Hien")
       setError('name', {
         message: 'Library name not unique',
       });
