@@ -1,6 +1,7 @@
 import "server-only"
 import { createClient } from '@supabase/supabase-js'
 import { TransactionDetails } from '@/lib/utils/types';
+import { transactionPageSize } from "./utils/constants";
 
 const supabaseUrl = process.env.SUPABASE_URL as string;
 const serviceRoleKey = process.env.SERVICE_ROLE_KEY as string;
@@ -20,6 +21,7 @@ export async function sBaseGetBalance(address: string) {
 
     return data.balance;
 }
+
 export async function sBaseGetUserID(address: string) {
     const {data, error}= await supabase
     .from("user_wallet")
@@ -82,4 +84,29 @@ export async function sBaseAddTransaction(transactionDetails: TransactionDetails
         console.log("Supabase error: ", error);
         throw new Error("Insert error");
     }
+}
+
+export async function sBaseGetTransactions(page: number, address: string) {
+    try {
+        const userID: string = await sBaseGetUserID(address);
+        const start = (page - 1) * transactionPageSize;
+        const end = start + transactionPageSize - 1;
+    
+        const {data, error} = await supabase
+        .from("transactions")
+        .select("*")
+        .eq("user_id", userID)
+        .range(start, end);
+      
+        if (error) {
+          console.log("error: ", error);
+          throw error;
+        }
+
+        return data;
+    } catch(error) {
+        console.log(error);
+        throw error;
+    }
+
 }
