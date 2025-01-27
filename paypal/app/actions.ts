@@ -6,7 +6,9 @@ import { TransactionDetails } from "@/lib/utils/types";
 
 export async function updateUserBalance() {
     const address = "bot";
-    if (!address) return false;
+    if (!address) return {
+        error: "Unauthenticated"
+    };
 
     try {
         console.log("Address:", address)
@@ -18,10 +20,10 @@ export async function updateUserBalance() {
             mode: "stable_audio"
         }
         await sBaseAddTransaction(transaction, address);
-        return true;
-
     } catch(error) {
         console.log(error);
-        return false;
+        return {
+            error: "Unable to add data to DB"
+        }
     }
 }

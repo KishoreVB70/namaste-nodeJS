@@ -3,7 +3,8 @@ import React from 'react'
 import { fal } from "@fal-ai/client";
 import Funds from '@/components/dashboard/Funds';
 import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { updateUserBalance } from '@/app/actions';
+import { error } from 'console';
 
 fal.config({
   proxyUrl: "/api/fal",
@@ -29,7 +30,9 @@ function GenerateAISound() {
         pollInterval:3000,
       });
       console.log(data, requestId);
-      await axios.put("/api/balance");
+      // Server action
+      const updateResult = await updateUserBalance();
+      if (updateResult?.error) console.log(error);
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['balance'] });
     } catch(error) {
