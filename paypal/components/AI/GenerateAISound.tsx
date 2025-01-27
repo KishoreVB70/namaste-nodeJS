@@ -1,7 +1,6 @@
 "use client"
 import React from 'react'
 import { fal } from "@fal-ai/client";
-import Funds from '@/components/dashboard/Funds';
 import { useQueryClient } from '@tanstack/react-query';
 import { updateUserBalance } from '@/app/actions';
 import { error } from 'console';
@@ -42,7 +41,6 @@ function GenerateAISound() {
 
   return (
     <div className='flex flex-col items-center justify-center'>
-      <Funds />
       <button 
         className='border border-white p-3 m-2 rounded-lg hover:text-black hover:bg-white'
         onClick={generateSound}  
