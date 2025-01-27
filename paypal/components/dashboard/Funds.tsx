@@ -1,10 +1,11 @@
 import { sBaseGetBalance } from '@/lib/supabase';
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import React from 'react'
 
 async function Funds() {
-  const cookieStore = cookies();
-  const address = cookieStore.get('address')?.value;
+  // const cookieStore = cookies();
+  // const address = cookieStore.get('address')?.value;
+  const address = "bot";
   if (!address) {
     return;
   }
