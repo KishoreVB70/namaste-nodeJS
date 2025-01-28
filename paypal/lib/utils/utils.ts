@@ -1,15 +1,17 @@
 import "server-only";
-import { ApiResponse, Order } from '@paypal/paypal-server-sdk';
+import { ApiResponse, Order } from "@paypal/paypal-server-sdk";
 
-export async function getResponseBody(response: ApiResponse<Order>): Promise<string> {
-  if (typeof response.body === 'string') {
+export async function getResponseBody(
+  response: ApiResponse<Order>,
+): Promise<string> {
+  if (typeof response.body === "string") {
     return response.body;
   } else if (response.body instanceof Blob) {
     return await response.body.text();
   } else if (response.body instanceof ReadableStream) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    let result = '';
+    let result = "";
     let done = false;
 
     while (!done) {
@@ -21,6 +23,6 @@ export async function getResponseBody(response: ApiResponse<Order>): Promise<str
     }
     return result;
   } else {
-    throw new Error('Unsupported response body type');
+    throw new Error("Unsupported response body type");
   }
 }

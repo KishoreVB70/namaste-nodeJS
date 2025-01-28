@@ -1,10 +1,8 @@
-"use client"
-import React from 'react'
+"use client";
+import React from "react";
 
 function Header() {
-  return (
-    <div></div>
-  )
+  return <div></div>;
 }
 
-export default Header
+export default Header;

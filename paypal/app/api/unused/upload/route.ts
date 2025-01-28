@@ -1,4 +1,4 @@
-export async function GET(){
+export async function GET() {
   const message = "This is a valid response!";
   return new Response(message, {
     status: 200,
@@ -6,7 +6,7 @@ export async function GET(){
       "Content-Type": "text/plain",
     },
   });
-}  
+}
 
 // import { writeFile } from "fs/promises";
 // import { NextRequest, NextResponse } from "next/server";

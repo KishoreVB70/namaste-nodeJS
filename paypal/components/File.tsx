@@ -1,6 +1,6 @@
-"use client"
-import axios from 'axios';
-import React, { useState } from 'react'
+"use client";
+import axios from "axios";
+import React, { useState } from "react";
 
 function File() {
   const [file, setFile] = useState<File | null>(null);
@@ -17,13 +17,12 @@ function File() {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       setMessage(`File uploaded successfully: ${response.data.message}`);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       setMessage("error");
     }
-
   }
 
   function fileChanleHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -33,17 +32,17 @@ function File() {
   }
 
   return (
-    <div className='flex flex-col'>
-    <input type="file" onChange={(e) => fileChanleHandler(e)} />
-    <button 
-      onClick={upload} 
-      className='m-5 p-5 border border-white hover:bg-white hover:text-black'
-    >
-      Upload
-    </button>
-    <p>{message}</p>
+    <div className="flex flex-col">
+      <input type="file" onChange={(e) => fileChanleHandler(e)} />
+      <button
+        onClick={upload}
+        className="m-5 p-5 border border-white hover:bg-white hover:text-black"
+      >
+        Upload
+      </button>
+      <p>{message}</p>
     </div>
-  )
+  );
 }
 
-export default File
+export default File;

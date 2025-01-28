@@ -1,9 +1,9 @@
 "use client";
 
-import React, { ReactNode } from 'react';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { LibraryFormData, librarySchema } from '@/lib/schema';
+import React, { ReactNode } from "react";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LibraryFormData, librarySchema } from "@/lib/schema";
 
 const Label = ({ children }: { children: ReactNode }) => (
   <label className="block text-white-a700 font-poppins mb-1 self-end !font-actor sm:self-auto text-[16px] font-semibold not-italic">
@@ -18,7 +18,7 @@ const Form = () => {
     formState: { errors, isSubmitting },
     setError,
     control,
-    reset
+    reset,
   } = useForm<LibraryFormData>({
     resolver: zodResolver(librarySchema),
   });
@@ -27,8 +27,8 @@ const Form = () => {
     // Check if library name is unique
     const isUniqueResult = false;
     if (!isUniqueResult) {
-      setError('name', {
-        message: 'Library name not unique',
+      setError("name", {
+        message: "Library name not unique",
       });
       return;
     }
@@ -49,7 +49,7 @@ const Form = () => {
       <div className="mb-4">
         <Label>Library Name</Label>
         <input
-          {...register('name')}
+          {...register("name")}
           type="text"
           placeholder="Rock music"
           className="!bg-white !text-black p-2 h-[40px] !px-4 !rounded-md font-medium"
@@ -59,7 +59,7 @@ const Form = () => {
       <div className="mb-4">
         <Label>Description</Label>
         <input
-          {...register('description')}
+          {...register("description")}
           type="text"
           placeholder="Quality rock"
           className="!bg-white !text-black p-2 h-[40px] !px-4 !rounded-md font-medium"
@@ -87,7 +87,7 @@ const Form = () => {
         className="w-full mt-5 py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Submitting...' : 'Add Library'}
+        {isSubmitting ? "Submitting..." : "Add Library"}
       </button>
     </form>
   );
