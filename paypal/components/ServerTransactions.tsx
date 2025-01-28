@@ -1,7 +1,6 @@
 import "server-only";
 
-import supabase, { sBaseGetTransactions, sBaseGetUserID } from '@/lib/supabase';
-import { transactionPageSize } from '@/lib/utils/constants';
+import  { sBaseGetTransactions } from '@/lib/supabase';
 import Link from 'next/link';
 import React from 'react';
 import TransactionTable from "@/components/dashboard/TransactionTable";
