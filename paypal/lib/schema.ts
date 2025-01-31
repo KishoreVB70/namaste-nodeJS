@@ -15,9 +15,8 @@ export const librarySchema = z.object({
     }),
   description: z.string().nonempty({ message: "Description is required" }),
   thumbnail: z
-    .any()
-    .refine((files) => files?.length >= 1, { message: "Photo is required." })
-    .refine((files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type), {
+    .instanceof(File)
+    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
       message: "Invalid image format. Only JPEG, PNG, and WebP are accepted.",
     }),
 });

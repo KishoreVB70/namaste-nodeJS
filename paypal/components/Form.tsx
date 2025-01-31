@@ -75,7 +75,9 @@ const Form = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => field.onChange(e.target.files)}
+              onChange={(e) =>
+                field.onChange(e.target.files ? e.target.files[0] : null)
+              }
               className="!bg-white !text-black p-2 h-[40px] !px-4 !rounded-md font-medium"
             />
           )}
