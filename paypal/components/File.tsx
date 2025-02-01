@@ -8,10 +8,8 @@ function File() {
   async function upload() {
     if (!file) return;
     try {
-      console.log("going in boys");
       const formData = new FormData();
       formData.append("file", file);
-      console.log(file);
       const response = await axios.post("/api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
