@@ -1,6 +1,28 @@
 "use client";
 import axios from "axios";
 import React, { useState } from "react";
+const CHUNK_SIZE = 4 * 1024 * 1024; // 4MB
+
+const uploadChunk = async (
+  chunkIndex: number,
+  chunk: Blob,
+  totalChunks: number,
+  fileName: string
+) => {
+  const formData = new FormData();
+  formData.append("chunk", chunk);
+  formData.append("chunkIndex", chunkIndex.toString());
+  formData.append("totalChunks", totalChunks.toString());
+  formData.append("fileName", fileName);
+
+  const response = await axios.post("/api/upload-file", formData);
+
+  // If it's the last chunk, get the IPFS CID from the response
+  if (chunkIndex === totalChunks - 1) {
+    const data = response.data;
+    return data.ipfsHash;
+  }
+};
 
 function File() {
   const [file, setFile] = useState<File | null>(null);
@@ -8,18 +30,26 @@ function File() {
   async function upload() {
     if (!file) return;
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const fileSize = file.size;
+      const fileName = file.name;
+      const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
 
-      setMessage(`File uploaded successfully: ${response.data.message}`);
+      for (let chunkIndex = 0; chunkIndex <= totalChunks; chunkIndex++) {
+        const start = chunkIndex * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, fileSize);
+        const chunk = file.slice(start, end);
+
+        const data = await uploadChunk(
+          chunkIndex,
+          chunk,
+          totalChunks,
+          fileName
+        );
+        if (data) return data;
+      }
     } catch (error) {
       console.log(error);
-      setMessage("error");
+      setMessage("error uploading file");
     }
   }
 
