@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import { readdir, readFile, open, writeFile, rm } from "fs/promises";
+import { pinata } from "@/lib/utils/pinataConfig";
 
 export const runtime = "nodejs";
 // Note: To use Formidable, Default Next server body parser must be disabled
@@ -98,13 +99,15 @@ export async function POST(req: NextRequest) {
     await fileHandle.close();
     const encryptedBuffer = await enryptFile(finalFilePath);
     console.log(encryptedBuffer);
+    const file = new File([encryptedBuffer], fileName, { type: "text/plain" });
+    const response = await pinata.upload.file(file);
 
     // Clean up: remove the temporary folder and its contents
     await rm(directoryPath, { recursive: true, force: true });
 
     return NextResponse.json({
       message: "File uploaded and reassembled successfully",
-      filePath: `/uploads/${fileName.toString()}`,
+      cid: response.IpfsHash,
     });
   } catch (error) {
     console.error("Error handling upload:", error);
