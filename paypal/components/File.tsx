@@ -15,12 +15,13 @@ const uploadChunk = async (
   formData.append("totalChunks", totalChunks.toString());
   formData.append("fileName", fileName);
 
-  const response = await axios.post("/api/upload-file", formData);
+  const response = await axios.post("/api/upload", formData);
 
   // If it's the last chunk, get the IPFS CID from the response
   if (chunkIndex === totalChunks - 1) {
+    console.log("response", response);
     const data = response.data;
-    return data.ipfsHash;
+    return data.cid;
   }
 };
 
@@ -34,7 +35,9 @@ function File() {
       const fileName = file.name;
       const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
 
-      for (let chunkIndex = 0; chunkIndex <= totalChunks; chunkIndex++) {
+      console.log(fileSize, totalChunks);
+
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
         const start = chunkIndex * CHUNK_SIZE;
         const end = Math.min(start + CHUNK_SIZE, fileSize);
         const chunk = file.slice(start, end);
@@ -45,7 +48,7 @@ function File() {
           totalChunks,
           fileName
         );
-        if (data) return data;
+        if (data) console.log("data obatined", data);
       }
     } catch (error) {
       console.log(error);
