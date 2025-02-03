@@ -28,6 +28,7 @@ const uploadChunk = async (
 function File() {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>("");
+  console.log("Rendered");
   async function upload() {
     if (!file) return;
     try {
